@@ -20,118 +20,138 @@
 
 int main() {
 
-	//auto table = std::map<std::string, int>{};
-	////int counter{ 0 };
-	//std::string word = "";
+	//***************Detta funkar med att läsa in det med iterators********************//
 
-
-	//std::ifstream in_file{ "X://TNG033//Labbar//Lab3NY//Code3//Code3//uppgift2//uppgift2_kort.txt" };
+	//std::vector<std::string> vec;
+	//
+	//std::ifstream in_file{ "C://Users//elidj//Cplus2//Labbar//Lab3//Code3//Code3//uppgift2//uppgift2_kort.txt" };
 
 	////kollar att filen är ok
 	//if (!in_file) {
 	//	std::cout << "Could not open input file!!\n";
 	//	return 1;
 	//}
+	//else {
+	//	std::cout << "Open!!\n";
+	//}
 
-
+	////Läser in filen till en iterator
 	//std::istream_iterator<std::string> first(in_file);
 	//std::istream_iterator<std::string> last;
-	//std::copy(first, last, std::back_inserter(table));
+	//
 
-
-	////std::vector<std::string> vec;
-	////std::vector<std::pair<std::string, int>> vec;
-
-	//std::for_each(table.begin(), table.end(),
-	//	[](auto& a) { std::cout << a.first << " " << a.second << "\n"; });
+	////skriver ut iteratorn till consolen
+	//std::copy(first, last, std::ostream_iterator<std::string>(std::cout, " "));
 
 	//in_file.close();
+	//return 0;
 
+	//*******************************************************************//
+	//*******************************************************************//
+
+
+	//************Läser in med kopy****************************//
+
+
+	//std::vector<std::string> vec;
+	//
+	//std::ifstream in_file{ "C://Users//elidj//Cplus2//Labbar//Lab3//Code3//Code3//uppgift2//uppgift2_kort.txt" };
+
+	////kollar att filen är ok
+	//if (!in_file) {
+	//	std::cout << "Could not open input file!!\n";
+	//	return 1;
+	//}
+	//else {
+	//	std::cout << "Open!!\n";
+	//}
+
+	////LÄser in en fil och kopierar över till en vector
+	//std::copy(std::istream_iterator<std::string>(in_file), std::istream_iterator<std::string>(),
+	//std::back_inserter(vec));
+
+	//std::copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(std::cout, " "));
+
+
+	////hash map
+	////sorterar om orden i bokstavsordning
+
+
+	////Läser in filen till en iterator
+	////std::istream_iterator<std::string> first(in_file);
+	////std::istream_iterator<std::string> last;
+	//
+	////skriver ut iteratorn till consolen
+	////std::copy(first, last, std::ostream_iterator<std::string>(std::cout, " "));
+
+	//in_file.close();
 	//return 0;
 
 
 
-	
-	auto table = std::map<std::string, int>{};
-	int counter{ 0 };
-	std::string word = "";
 
+	//*******************************************************************//
+
+
+
+	std::vector<std::string> vec;
 	
-	std::ifstream in_file{ "X://TNG033//Labbar//Lab3NY//Code3//Code3//uppgift2//uppgift2_kort.txt" };
+	std::ifstream in_file{ "C://Users//elidj//Cplus2//Labbar//Lab3//Code3//Code3//uppgift2//uppgift2_kort.txt" };
 
 	//kollar att filen är ok
 	if (!in_file) {
 		std::cout << "Could not open input file!!\n";
 		return 1;
 	}
-
-	
-	while (in_file >> word) {
-
-
-		
-
-
-		table[word]++;
-		++counter;
+	else {
+		std::cout << "Open!!\n";
 	}
 
-	//skrive ej vec(table.size()) får då tomma slots eftersom vi tar bort värden i map
-	std::vector<std::pair<std::string, int>> vec;
 
-	int uniqueValues = 0;
+	//LÄser in en fil och kopierar över till en vector
+	//std::copy(std::istream_iterator<std::string>(in_file), std::istream_iterator<std::string>(),
+	//std::back_inserter(vec));
+
+	//std::copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(std::cout, " "));
+
+
+	//hash map
+	//sorterar om orden i bokstavsordning
+
+	sortfunc{
 
 
 
+	}
 
 
-		//const för att få det att fungera
-	std::for_each(table.begin(), table.end(),
-		[&](std::pair<const std::string, int>& a)
-	{
-		vec.push_back(std::make_pair(a.first, a.second));
-		uniqueValues++;
+	//Läser in filen till en iterator
+	std::istream_iterator<std::string> first(in_file);
+	std::istream_iterator<std::string> last;
+	
+
+	sortfunc{
+		//ska sortera orden
+		//ska lägga in dem i map
 		
-	});
-	//ny loop +sorterar
-std::sort(vec.begin(), str.end());
 
+	}
 
-	struct MyComp {
-		bool operator()(std::pair<std::string, int>& a, std::pair<std::string, int>& b) { return a.second > b.second; }
-	};
+	//denna läser in en fil
+	std::for_each(first, last, sortfunc){
 
-	std::sort(vec.begin(), vec.end(), MyComp());
+	}
 
-	//vecIt it = std::copy(v.begin(), v.end(), dest.begin() + 1);
-	//std::copy(table.begin(), table.end(), vec.begin());
-
-
-	//int uniqueValues = vec.size();
-
-
-	std::cout << "Number of words in the file = " << counter << "\n";
-	std::cout << "Number unique  words in the file = " << uniqueValues << "\n\n";
-
-	std::cout << "Frequency table sorted alphabetically ... " << "\n\n";
-
-	std::for_each(table.begin(), table.end(),
-		[](auto& a) { std::cout << a.first << " " << a.second << "\n"; });
-
-	std::cout << "Frequency table sorted frequently ... " << "\n\n";
-
-	std::for_each(vec.begin(), vec.end(),
-		[](auto& a) { std::cout << a.first << " " << a.second << "\n"; });
-
+	//skriver ut iteratorn till consolen
+	//std::copy(first, last, std::ostream_iterator<std::string>(std::cout, " "));
 
 	in_file.close();
-
-
 	return 0;
 
 
 
 
+	//**********************************************************************//
 
 
 
@@ -140,6 +160,65 @@ std::sort(vec.begin(), str.end());
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	////vill kopiera över till en map
+	//	auto table = std::map<std::string, int>{};
+	//	int counter{ 0 };
+	//	std::string word = "";
+
+
+
+	//std::cout << std::endl << std::endl << "HEjhej fei" << std::endl;
+
+	//std::copy(first, last, std::back_inserter(vec));
+
+	//FUNKAR EJ har denna lyckats kopiera över vectorn till en map? 
+		//std::copy(vec.begin(), vec.end(), std::inserter(table, table.begin()));
+
+		//FUNKAR EJ samma som den en rad upp
+		//std::map<std::string, int> m2((vec.begin()), vec.end());
+
+
+	//Bör skriva ut map, funkar ej
+	/*std::for_each(table.begin(), table.end(),
+		[](auto& a) { std::cout << a.first << " " << a.second << "\n"; });*/
+
+	//kopiera bara om typ if statment
+	//std::copy_if
+	//std::vector<std::pair<std::string, int> > vec;
+
+	//auto table = std::map<std::string, int>{};
+//int counter{ 0 };
+//std::string word = "";
+
+
+	//std::vector<std::string> vec;
+	//std::vector<std::pair<std::string, int>> vec;
+
+	/*std::for_each(vec.begin(), vec.end(),
+		[](auto& a) { std::cout << vec << "\n"; });*/
+
+		//std::for_each(vec.begin(), vec.end(), TimesThree());
 
 
 
