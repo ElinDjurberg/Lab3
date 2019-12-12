@@ -92,7 +92,7 @@ int main() {
 
 	//*******************************************************************//
 
-
+	//TRYING TO READ IN IN MAP
 
 	std::vector<std::string> vec;
 	
@@ -118,11 +118,6 @@ int main() {
 	//hash map
 	//sorterar om orden i bokstavsordning
 
-	sortfunc{
-
-
-
-	}
 
 
 	//Läser in filen till en iterator
@@ -130,17 +125,83 @@ int main() {
 	std::istream_iterator<std::string> last;
 	
 
-	sortfunc{
+	
 		//ska sortera orden
 		//ska lägga in dem i map
 		
 
-	}
+	//////////////////////////////////////////////////
+
+
+	auto table = std::map<std::string, std::set<std::string>>{};
+
+	struct insertMap {
+		 
+
+	public: 
+		insertMap(std::map<std::string, std::set<std::string>> &x) : T{ x } {}//ska den se ut så med {}
+
+
+		void operator() (std::string &a) { 
+			std::sort(a.begin(), a.end());
+
+			std::cout << a << std::endl;
+		}
+
+
+		//function() som sorterar och lägger in i map samt insert i set.
+		//using för att byta namn std::map<std::string, std::set<std::string>>
+		//tabel[x].insert(....)
+		//constructor to map
+		//insert in map
+		//ex 4 set 6
+		//class abs
+		//constructor
+		//function
+
+		//private &to the map
+		//using nytt namn för map
+		//mytabel & 
+
+	private:
+
+		std::map<std::string, std::set<std::string>> &T;
+	};		//lambda expression	//auto glambda = [](auto a, auto&& b) { return a < b; };
+
 
 	//denna läser in en fil
-	std::for_each(first, last, sortfunc){
+	std::for_each(first, last, insertMap) {
+
 
 	}
+
+
+	/////////////////////////////////////////////////////
+
+	//ska den vara const?? Vi vill ju sortera den??
+	////map sorterar väl automatiskt fast kanske inte orden?
+	//std::for_each(first, last, [](std::string& p)//[](std::string& p) är detta rätt
+	//{
+	//	//sortera
+	//	//läg in i map
+	//	//p är den sträng vi läser in och det är den som ska sorteras i bokstavsordning
+	//	//	//std::for_each(Map.begin(), Map.end(), CallMyMethod);
+	//	//lägg in i map
+	//	//lägger den endast in unika ord??
+	//	//lägger detta in 
+	//	table[p]++;
+
+	//	//iterator table.insert({ key, element })
+	//	
+
+	//	//läg in i set om den redan finns
+
+	//	//skriv ut
+	//	std::cout << p << std::endl;
+
+
+	//});
+
 
 	//skriver ut iteratorn till consolen
 	//std::copy(first, last, std::ostream_iterator<std::string>(std::cout, " "));
