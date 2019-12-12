@@ -94,7 +94,10 @@ int main() {
 
 	//TRYING TO READ IN IN MAP
 
-	std::vector<std::string> vec;
+	//std::vector<std::string> vec;
+
+	//Göra ett nytt enklare namn istället för std::map<std::string, std::set<std::string>> 
+	using My_table = std::map<std::string, std::set<std::string>>;
 	
 	std::ifstream in_file{ "C://Users//elidj//Cplus2//Labbar//Lab3//Code3//Code3//uppgift2//uppgift2_kort.txt" };
 
@@ -133,21 +136,34 @@ int main() {
 	//////////////////////////////////////////////////
 
 
-	auto table = std::map<std::string, std::set<std::string>>{};
+	auto table = My_table{};
 
 	struct insertMap {
 		 
 
 	public: 
-		insertMap(std::map<std::string, std::set<std::string>> &x) : T{ x } {}//ska den se ut så med {}
+		insertMap(My_table &x) : T{ x } {}//ska den se ut så med {}
 
 
-		void operator() (std::string &a) { 
-			std::sort(a.begin(), a.end());
-
+		void operator() (std::string a) { 
+			std::string temp{ a };
+			std::sort(temp.begin(), temp.end());
 			std::cout << a << std::endl;
+			//counter++;
+			//T[temp] är pekaren
+			if (T[temp].size == 0) {
+				T[temp] = std::set<std::string>{a};
+			}
+			else {
+				T[temp].insert(a);
+			}
+			//else insert i T[temp]
+			//T[temp] = a;
+			//T.insert(*a);
 		}
 
+
+		//2st strukts en för set
 
 		//function() som sorterar och lägger in i map samt insert i set.
 		//using för att byta namn std::map<std::string, std::set<std::string>>
@@ -165,15 +181,13 @@ int main() {
 
 	private:
 
-		std::map<std::string, std::set<std::string>> &T;
+		My_table &T;
 	};		//lambda expression	//auto glambda = [](auto a, auto&& b) { return a < b; };
 
-
+	//skicka in .counter
 	//denna läser in en fil
-	std::for_each(first, last, insertMap) {
-
-
-	}
+	std::for_each(first, last, insertMap{ table });
+	
 
 
 	/////////////////////////////////////////////////////
