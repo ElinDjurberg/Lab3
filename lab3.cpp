@@ -2,34 +2,26 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <locale>  //to lower
 #include <cctype>
-//#include <vector>
 #include <numeric>
-#include <iterator>
-#include <utility>
-//
+#include <iomanip>  //setw
 #include <algorithm>
 #include <vector>
-#include <cmath>
 
-//#include <iomanip>
-
-//Obs vi får endast ha 1 loop
+struct MyComp {
+	bool operator()(std::pair<std::string, int>& a, std::pair<std::string, int>& b) { return a.second > b.second; }
+};
 
 int main() {
 
-	//std::map<std::string, int> table;
+	//Map kan ta in 2st värden
 	auto table = std::map<std::string, int>{};
 	int counter{0};
 	std::string word = "";
 
 	// Vector: To find unique words
-	
-
-
-	//std::locale loc; //tolower
-	//std::make_pair<std::string, int>{};
+	//skriver ej vec(table.size()) får då tomma slots eftersom vi tar bort värden i map
+	std::vector<std::pair<std::string, int>> vec;
 
 	//std::ifstream in_file{"X://TNG033//Labbar//Lab3NY//Code3//Code3//uppgift1//uppgift1.txt"};
 	std::ifstream in_file{"X://TNG033//Labbar//Lab3NY//Code3//Code3//uppgift1//uppgift1_kort.txt"};
@@ -40,20 +32,10 @@ int main() {
 		return 1;
 	}
 
-	//std::istream_iterator<std::string> iterator_in(in_file);
-	//std::istream_iterator<std::string> iterator_end();
-
-	//Map kan ta in 2st värden
-	
-	//in_file >> word)
-	//iterator_in != iterator_end
+	// counter = number of occurences
+	// table keeps for each word the number of occurrences
 	while (in_file >> word) {
 		// för att to-low orden
-		//std::transform(word.begin(), word.end(), word.begin(), std::tolower);
-
-		
-		//const char* word = word.c_str();
-
 		std::transform(word.begin(), word.end(), word.begin(), [](char c) {return static_cast<char>(std::tolower(c)); });
 
 		//delete diffrent signs
@@ -61,50 +43,20 @@ int main() {
 		word.erase(std::remove(word.begin(), word.end(), '.'), word.end());
 		word.erase(std::remove(word.begin(), word.end(), '"'), word.end());
 		word.erase(std::remove(word.begin(), word.end(), '?'), word.end());
-		//word.erase(std::remove(word.begin(), word.end(), '-'), word.end());
 
+		// Lägger in ord i vår map
+		//map lägger bara in unika ord. Om ordet redan finns läggs den inte in.
 		table[word]++;
+		// counter = number of occurences
 		++counter;
 	}
 
-	//skrive ej vec(table.size()) får då tomma slots eftersom vi tar bort värden i map
-	std::vector<std::pair<std::string, int>> vec;
-
-	//for_each ist
-	// Range-based loop
-	//for(auto& a : table)
-	//{
-	//	// Lägg till ut över allt från map i en vector. Map sparar unika ord så vectorn kommer endast ha 1 av varje ord
-	//	//vector size blir då antalet unika ord.
-	//	//first är för att komma åt första i map alltså ordet. First kommer från map
-	//	vec.push_back(a.first);
-	//}
-
-	//std::fill_n(std::back_inserter(vec), 1, a.first);
-
-	//vektorns storlek är antalet unika ord
+	//vektorns storlek är antalet unika ord eftersom vi lägger över från map till vec och map innehåller bara unika ord.
 	int uniqueValues = 0;
 
-
-
-	
-//	std::sort(vec.begin(), vec.end(), [](int a.second, int a.second + 1) { return a.second > a.second + 1; });
-	// or for example
-	//std::sort(v.begin(), v.end(), std::greater<int>());
-
-	//std::vector<int> vec = { -3, 5, 1, 3, -2, 7 };
-	
-
-	//std::for_each(vec.begin(), vec.end(),
-	//	[&](std::pair<const std::string, int>& a)
-	//{
-	//	//std::sort(vec.begin(), vec.end(), [](int a.second, int a.second + 1) { return a.second > a.second + 1; });
-	//	std::sort(vec.begin(), vec.end(), a.second);
-	//});
-
-
-
 	//const för att få det att fungera
+	// Sätter in våra unika ord i vektorn, ökar unika ord
+	//vi kunde ej ta map.size() eftersom den räknar alla element som läggs in alltså string och int. Vi vill ju endast antal strings.
 		std::for_each(table.begin(), table.end(),
 		[&](std::pair<const std::string, int>& a) 
 		{
@@ -112,45 +64,29 @@ int main() {
 			uniqueValues++;
 		});
 
-	struct MyComp {
-			bool operator()(std::pair<std::string, int>& a, std::pair<std::string, int>& b) { return a.second > b.second; }
-		};
-
+	//Kallar på MyComp och sorterar efter frekvens, därför behöver vi sorteringsfunktion (MyComp)
 	std::sort(vec.begin(), vec.end(), MyComp());
-
-	//vecIt it = std::copy(v.begin(), v.end(), dest.begin() + 1);
-	//std::copy(table.begin(), table.end(), vec.begin());
 	
-
-	//int uniqueValues = vec.size();
-	
-
+	//Skriver ut antal ord, counter, som ökas i vår while-loop 
 	std::cout << "Number of words in the file = " << counter << "\n";
+
+	// Skriver ut våra unika ord, som ökas i for_each-loopen där vi lägger in värden i vektorn
 	std::cout << "Number unique  words in the file = " << uniqueValues << "\n\n";
 
 	std::cout << "Frequency table sorted alphabetically ... " << "\n\n";
 
+	// Skriver ut våra ord sorterade alfabetiskt
+	// Map (table) sorterar automatiskt alfabetiskt och de lägger bara in unika ord(??)
 	std::for_each(table.begin(), table.end(),
-	[](auto& a) { std::cout << a.first << " " << a.second << "\n"; });
+	[](auto& a) { std::cout << std::setw(20) << std::left << a.first << a.second << "\n"; });
 
-	std::cout << "Frequency table sorted frequently ... " << "\n\n";
+	std::cout << "\n\n" << "Frequency table sorted by frequence ... " << "\n\n";
 
 	std::for_each(vec.begin(), vec.end(),
-		[](auto& a) { std::cout << a.first << " " << a.second << "\n"; });
+		[](auto& a) { std::cout << std::setw(20) << std::left << a.first << " " << a.second << "\n"; });
 
-
-	//// Range-based loop
-	//for(auto& a : table)
-	//{
-	//	std::cout << a.first << " " << a.second << "\n";
-	//	vec.push_back(a.first);
-	//}
-
-	//auto p = std::make_pair(10, "value");
-	//auto out_it = std::ostream_iterator<my_pair>{ std::cout, "\n" };
 	//stänger fil
 	in_file.close();
-
 
 	return 0;
 }
