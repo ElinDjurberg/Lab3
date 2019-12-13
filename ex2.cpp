@@ -4,19 +4,15 @@
 #include <string>
 #include <locale>  //to lower
 #include <cctype>
-//#include <vector>
 #include <numeric>
 #include <iterator>
 #include <utility>
-//
 #include <algorithm>
 #include <vector>
 #include <cmath>
 #include <set>
 
-//#include <iomanip>
 
-//Obs vi får endast ha 1 loop
 
 int main() {
 
@@ -92,14 +88,67 @@ int main() {
 
 	//*******************************************************************//
 
-	//TRYING TO READ IN IN MAP
 
-	//std::vector<std::string> vec;
+	//Detta är ett lambdaexpression
+	//[]skickar in allt man vill fånga
+	//() är som en konstructor
+	//{}är allt vi vill göra som en loop ish
+	//std::for_each(table.begin(), table.end(),
+	//	[&](std::pair<const std::string, int>& a)
+	//{
+	//	vec.push_back(std::make_pair(a.first, a.second));
+	//	uniqueValues++;
+	//});
+
+	//*******************************************************************//
+
+
+
+
+
 
 	//Göra ett nytt enklare namn istället för std::map<std::string, std::set<std::string>> 
 	using My_table = std::map<std::string, std::set<std::string>>;
-	
-	std::ifstream in_file{ "C://Users//elidj//Cplus2//Labbar//Lab3//Code3//Code3//uppgift2//uppgift2_kort.txt" };
+
+	//skapar en map av string samt set av string, std::map<std::string, std::set<std::string>> 
+	auto table = My_table{};
+
+	//struct
+	struct insertMap {
+	public:
+		//constructor
+		//måste ha för att komma åt vår tabel utanför, använder &referens för att ändra
+		insertMap(My_table &x) : T{ x } {}
+
+		void operator() (std::string a) {
+
+			//temp is sorted words/subject
+			std::string temp{ a };
+			std::sort(temp.begin(), temp.end());
+
+			//Number of words read
+			howMany++;
+
+			//T.count(temp) kollar om map (a.first) är tom, i så fall skapas ett nytt sett
+			//map tar bara in unika ord samt sorterar i bokstavsordning
+			if (T.count(temp) == 0) {
+				T[temp] = std::set<std::string>{ a };
+			}
+			else {
+				//om det redan finns något i map så insertar man en extra i set. a är det riktiga ordet, temp är subjectet
+				T[temp].insert(a);
+			}
+		}
+
+		//måste vara public annars kan vi ej nå den
+		int howMany = 0;
+
+	private:
+		My_table &T;
+	};
+
+	//std::ifstream in_file{ "X://TNG033//Labbar//Lab3NY//Code3//Code3//uppgift2//uppgift2.txt" };
+	std::ifstream in_file{ "X://TNG033//Labbar//Lab3NY//Code3//Code3//uppgift2//uppgift2_kort.txt" };
 
 	//kollar att filen är ok
 	if (!in_file) {
@@ -110,243 +159,42 @@ int main() {
 		std::cout << "Open!!\n";
 	}
 
-
-	//LÄser in en fil och kopierar över till en vector
-	//std::copy(std::istream_iterator<std::string>(in_file), std::istream_iterator<std::string>(),
-	//std::back_inserter(vec));
-
-	//std::copy(vec.begin(), vec.end(), std::ostream_iterator<std::string>(std::cout, " "));
-
-
-	//hash map
-	//sorterar om orden i bokstavsordning
-
-
-
-	//Läser in filen till en iterator
+	//Läser in filen med en iterator
 	std::istream_iterator<std::string> first(in_file);
 	std::istream_iterator<std::string> last;
-	
 
-	
-		//ska sortera orden
-		//ska lägga in dem i map
-		
+	//detta funkar ej eftersom då är iteratorerna redan använda på något sätt
+	//int counter = distance(first, last);
 
-	//////////////////////////////////////////////////
-
-
-	auto table = My_table{};
-
-	struct insertMap {
-		 
-
-	public: 
-		insertMap(My_table &x) : T{ x } {}//ska den se ut så med {}
-
-
-		void operator() (std::string a) { 
-			std::string temp{ a };
-			std::sort(temp.begin(), temp.end());
-			std::cout << a << std::endl;
-			//counter++;
-			//T[temp] är pekaren
-			if (T[temp].size == 0) {
-				T[temp] = std::set<std::string>{a};
-			}
-			else {
-				T[temp].insert(a);
-			}
-			//else insert i T[temp]
-			//T[temp] = a;
-			//T.insert(*a);
-		}
-
-
-		//2st strukts en för set
-
-		//function() som sorterar och lägger in i map samt insert i set.
-		//using för att byta namn std::map<std::string, std::set<std::string>>
-		//tabel[x].insert(....)
-		//constructor to map
-		//insert in map
-		//ex 4 set 6
-		//class abs
-		//constructor
-		//function
-
-		//private &to the map
-		//using nytt namn för map
-		//mytabel & 
-
-	private:
-
-		My_table &T;
-	};		//lambda expression	//auto glambda = [](auto a, auto&& b) { return a < b; };
-
-	//skicka in .counter
 	//denna läser in en fil
-	std::for_each(first, last, insertMap{ table });
-	
+	//Den returnerar antalet instanser
+	auto instanceOfInsertMap = std::for_each(first, last, insertMap{ table });
+	//kallar på vår howMany från structen så att vi kommer åt antalet
+	auto counter = instanceOfInsertMap.howMany;
+
+	std::cout << "Numbers of words = " << counter << "\n\n";	std::cout << "--- ANAGRAMS --- " << "\n";
+
+	std::for_each(table.begin(), table.end(),
+		[](auto& a) {
+
+		//sizen av set
+		if (a.second.size() > 1) {
+			//secound.begin() är början av setten
+			std::for_each(a.second.begin(), a.second.end(),
+				[](auto& b) {
+
+				//skriver ut hela settet
+				std::cout << b << " ";
+
+			});
+			//Antal ord i sett/antal anagram
+			std::cout << "-> " << a.second.size() << " words" << "\n";
+		}
+	});
 
 
-	/////////////////////////////////////////////////////
-
-	//ska den vara const?? Vi vill ju sortera den??
-	////map sorterar väl automatiskt fast kanske inte orden?
-	//std::for_each(first, last, [](std::string& p)//[](std::string& p) är detta rätt
-	//{
-	//	//sortera
-	//	//läg in i map
-	//	//p är den sträng vi läser in och det är den som ska sorteras i bokstavsordning
-	//	//	//std::for_each(Map.begin(), Map.end(), CallMyMethod);
-	//	//lägg in i map
-	//	//lägger den endast in unika ord??
-	//	//lägger detta in 
-	//	table[p]++;
-
-	//	//iterator table.insert({ key, element })
-	//	
-
-	//	//läg in i set om den redan finns
-
-	//	//skriv ut
-	//	std::cout << p << std::endl;
-
-
-	//});
-
-
-	//skriver ut iteratorn till consolen
-	//std::copy(first, last, std::ostream_iterator<std::string>(std::cout, " "));
 
 	in_file.close();
 	return 0;
 
-
-
-
-	//**********************************************************************//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	////vill kopiera över till en map
-	//	auto table = std::map<std::string, int>{};
-	//	int counter{ 0 };
-	//	std::string word = "";
-
-
-
-	//std::cout << std::endl << std::endl << "HEjhej fei" << std::endl;
-
-	//std::copy(first, last, std::back_inserter(vec));
-
-	//FUNKAR EJ har denna lyckats kopiera över vectorn till en map? 
-		//std::copy(vec.begin(), vec.end(), std::inserter(table, table.begin()));
-
-		//FUNKAR EJ samma som den en rad upp
-		//std::map<std::string, int> m2((vec.begin()), vec.end());
-
-
-	//Bör skriva ut map, funkar ej
-	/*std::for_each(table.begin(), table.end(),
-		[](auto& a) { std::cout << a.first << " " << a.second << "\n"; });*/
-
-	//kopiera bara om typ if statment
-	//std::copy_if
-	//std::vector<std::pair<std::string, int> > vec;
-
-	//auto table = std::map<std::string, int>{};
-//int counter{ 0 };
-//std::string word = "";
-
-
-	//std::vector<std::string> vec;
-	//std::vector<std::pair<std::string, int>> vec;
-
-	/*std::for_each(vec.begin(), vec.end(),
-		[](auto& a) { std::cout << vec << "\n"; });*/
-
-		//std::for_each(vec.begin(), vec.end(), TimesThree());
-
-
-
-
-
-	//MyDataType needs to implement an operator>>
-	//auto table = std::map<std::string, std::set<int>>{};
-
-
-	//std::istream_iterator<std::string> first(in_file);
-	//std::istream_iterator<std::string> last;
-	//std::copy(first, last, std::back_inserter(vec));
-
-
-	//std::map<std::string, int> vec;
-
-	//std::istream_iterator<std::string> iterator_in(in_file);
-	//std::istream_iterator<std::string> iterator_end();
-
-
-	//std::vector<std::pair<std::string, int>> vec;
-
-
-
-	//std::istream_iterator<int> first(in_file);
-	//std::istream_iterator<int> last;
-
-	//std::vector<std::string> vec;
-
-	//std::copy(first, last, std::back_inserter(vec));
-
-	////läser ut s.20 föreläsning 12
-	////std::ostream_iterator<int> iteratorOut(std::cout, ",");
-	////nätet
-	////std::copy(l.begin(), l.end(), std::ostream_iterator <int>(std::cout, " "));
-	////std::ostream_iterator <int>(std::cout, " "));
-
-	//std::for_each(table.begin(), table.end(),
-	//	[](auto& a) { std::cout << a.first << " " << a.second << "\n"; });
-
-	//in_file.close();
-
-
-	//return 0;
 }
-
-
-
-
-//std::istream& operator>>(std::istream &in, std::string & out)
-//{
-//	std::string str;
-//	std::getline(in, str);
-//	//Do something with str without using loops
-//	return in;
-//}

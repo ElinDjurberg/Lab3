@@ -57,6 +57,8 @@ int main() {
 	//const för att få det att fungera
 	// Sätter in våra unika ord i vektorn, ökar unika ord
 	//vi kunde ej ta map.size() eftersom den räknar alla element som läggs in alltså string och int. Vi vill ju endast antal strings.
+	//vi måste ha const för for_each få ej ändra på det den får in eftersom vi skickar in det som referens.
+	//om vi skickar in det som kopy så hade vi inte behövt ha konstan för då ändrar vi ej ursprungsvärdet.
 		std::for_each(table.begin(), table.end(),
 		[&](std::pair<const std::string, int>& a) 
 		{
