@@ -15,6 +15,9 @@ struct MyComp {
 int main() {
 
 	//Map kan ta in 2st värden
+	// ett nyckel, lägger un i mappen
+	// int är det vi vill ha, string är nyckeln för att hitta int
+	// om man frågar map om string finns/ej, först sedan lägga in int
 	auto table = std::map<std::string, int>{};
 	int counter{0};
 	std::string word = "";
@@ -35,14 +38,25 @@ int main() {
 	// counter = number of occurences
 	// table keeps for each word the number of occurrences
 	while (in_file >> word) {
+		
 		// för att to-low orden
+		//Den 3 word.begin() säger att vi vill lägga in/override transformationen i början av ordet. Så Elin blir elin
+		//Om vi hade haft word.end() där så hade det blivit ex Elinelin för vi börjar inserta i slutet av ordet
 		std::transform(word.begin(), word.end(), word.begin(), [](char c) {return static_cast<char>(std::tolower(c)); });
 
-		//delete diffrent signs
+		// delete different signs
+		// en iterator är ett objekt som har egenskaper
+		// std::remove(word.begin(), word.end(), ',' är en iterator med villkor, vad den ska göra
+		// anropar next fukntion, returnera nästa som är enligt krav
+		// remove skapar en iteror som letar upp alla komma-tecken
+		// erase använder iteratorn för att ta bort ','
+		// word.erase, det är funktionen erase som tar bort tecknen från objektet word
+
 		word.erase(std::remove(word.begin(), word.end(), ','), word.end());
 		word.erase(std::remove(word.begin(), word.end(), '.'), word.end());
 		word.erase(std::remove(word.begin(), word.end(), '"'), word.end());
 		word.erase(std::remove(word.begin(), word.end(), '?'), word.end());
+		//remove_if kan man göra det i en linje
 
 		// Lägger in ord i vår map
 		//map lägger bara in unika ord. Om ordet redan finns läggs den inte in.
@@ -51,8 +65,10 @@ int main() {
 		++counter;
 	}
 
+	
 	//vektorns storlek är antalet unika ord eftersom vi lägger över från map till vec och map innehåller bara unika ord.
-	int uniqueValues = 0;
+	//tydligen kunde man göra vec size
+	int uniqueValues = table.size();
 
 	//const för att få det att fungera
 	// Sätter in våra unika ord i vektorn, ökar unika ord
@@ -63,7 +79,7 @@ int main() {
 		[&](std::pair<const std::string, int>& a) 
 		{
 			vec.push_back(std::make_pair(a.first, a.second));
-			uniqueValues++;
+			//uniqueValues++;
 		});
 
 	//Kallar på MyComp och sorterar efter frekvens, därför behöver vi sorteringsfunktion (MyComp)

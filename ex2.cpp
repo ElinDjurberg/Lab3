@@ -110,6 +110,7 @@ int main() {
 	//Göra ett nytt enklare namn istället för std::map<std::string, std::set<std::string>> 
 	using My_table = std::map<std::string, std::set<std::string>>;
 
+	//Vi vill ha set istället för vector eftersom set automatiskt endast tar in unika ord och vi vill inte att vårt set ska ha flera av samma ord vilket det hade haft om vi haft vector.
 	//skapar en map av string samt set av string, std::map<std::string, std::set<std::string>> 
 	auto table = My_table{};
 
@@ -131,13 +132,16 @@ int main() {
 
 			//T.count(temp) kollar om map (a.first) är tom, i så fall skapas ett nytt sett
 			//map tar bara in unika ord samt sorterar i bokstavsordning
-			if (T.count(temp) == 0) {
-				T[temp] = std::set<std::string>{ a };
-			}
-			else {
+			//if (T.count(temp) == 0) {
+				//T[temp] = std::set<std::string>{ a };
+			//}
+			//else {
 				//om det redan finns något i map så insertar man en extra i set. a är det riktiga ordet, temp är subjectet
+			//De andra behövdes ej. 
+
+			//De andra behövdes ej. Denna gör en ny set om den inte redan existerar.
 				T[temp].insert(a);
-			}
+			//}
 		}
 
 		//måste vara public annars kan vi ej nå den
@@ -159,7 +163,12 @@ int main() {
 		std::cout << "Open!!\n";
 	}
 
-	//Läser in filen med en iterator
+	// Läser in filen med en iterator
+	// std::istream_iterator<std::string> first(in_file); jobbar på en stream
+	// jobbar på in_file (som är en stream)
+	// varje gång man anropar next, får nästa ord
+
+	//last gör igentligen inget men vi behöver den till std::for_each på rad 180 för där måste man skicka in 2st av samma typ.
 	std::istream_iterator<std::string> first(in_file);
 	std::istream_iterator<std::string> last;
 
@@ -169,6 +178,7 @@ int main() {
 	//denna läser in en fil
 	//Den returnerar antalet instanser
 	auto instanceOfInsertMap = std::for_each(first, last, insertMap{ table });
+	
 	//kallar på vår howMany från structen så att vi kommer åt antalet
 	auto counter = instanceOfInsertMap.howMany;
 
